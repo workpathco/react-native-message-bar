@@ -103,6 +103,7 @@ class MessageBar extends Component {
       titleStyle: props.titleStyle || { color: 'white', fontSize: 18, fontWeight: 'bold' },
       messageStyle: props.messageStyle || { color: 'white', fontSize: 16 },
       avatarStyle: props.avatarStyle || { height: 40, width: 40, borderRadius: 20 },
+      containerStyle: props.containerStyle || {},
 
       /* Position of the alert and Animation Type the alert is shown */
       position: props.position || 'top',
@@ -363,7 +364,7 @@ class MessageBar extends Component {
     return (
       <Animated.View style={{ transform: this.animationTypeTransform, backgroundColor: this.state.backgroundColor, borderColor: this.state.strokeColor, borderBottomWidth: 1, position: 'absolute', top: this.state.viewTopOffset, bottom: this.state.viewBottomOffset, left: this.state.viewLeftOffset, right: this.state.viewRightOffset, paddingTop: this.state.viewTopInset, paddingBottom: this.state.viewBottomInset, paddingLeft: this.state.viewLeftInset, paddingRight: this.state.viewRightInset }}>
         <TouchableOpacity onPress={()=>{this._alertTapped()}} style={{ flex: 1 }}>
-          <View style={{ flex: 1, flexDirection: 'row', alignItems: 'flex-end', padding: 10 }} >
+          <View style={{ flex: 1, flexDirection: 'row', alignItems: 'flex-end', padding: 10, ...this.state.containerStyle }} >
             { this.renderImage() }
             <View style={{ flex: 1, flexDirection: 'column', alignSelf: 'stretch', justifyContent: 'center', marginLeft: 10 }} >
               { this.renderTitle() }
