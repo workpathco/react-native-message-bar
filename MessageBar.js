@@ -28,6 +28,7 @@ class MessageBar extends Component {
     this.notifyAlertHiddenCallback = null;
     this.alertShown = false;
     this.timeoutHide = null;
+    this.animationTypeNone = null;
 
     this.state = this.getStateByProps(props);
   }
@@ -364,11 +365,11 @@ class MessageBar extends Component {
         this.animationTypeTransform = [{ translateX: animationX }];
         break;
       case "none":
-        var animationX = this.animatedValue.interpolate({
+        var animationFade = this.animatedValue.interpolate({
           inputRange: [0, 1],
-          outputRange: [0, 0]
+          outputRange: [0, 1]
         });
-        this.animationTypeTransform = [{ translateX: animationX }];
+        this.animationTypeNone = animationFade;
         break;
       default:
         var animationY = this.animatedValue.interpolate({
@@ -388,24 +389,29 @@ class MessageBar extends Component {
     // Set the animation transformation depending on the chosen animationType, or depending on the state's position if animationType is not overridden
     this._apllyAnimationTypeTransformation();
 
+    const style = {
+      backgroundColor: this.state.backgroundColor,
+      borderColor: this.state.strokeColor,
+      borderBottomWidth: 1,
+      position: "absolute",
+      top: this.state.viewTopOffset,
+      bottom: this.state.viewBottomOffset,
+      left: this.state.viewLeftOffset,
+      right: this.state.viewRightOffset,
+      paddingTop: this.state.viewTopInset,
+      paddingBottom: this.state.viewBottomInset,
+      paddingLeft: this.state.viewLeftInset,
+      paddingRight: this.state.viewRightInset
+    };
+
+    if (this.animationTypeNone) {
+      style.opacity = this.animationTypeNone;
+    } else {
+      style.transform = this.animationTypeTransform;
+    }
+
     return (
-      <Animated.View
-        style={{
-          transform: this.animationTypeTransform,
-          backgroundColor: this.state.backgroundColor,
-          borderColor: this.state.strokeColor,
-          borderBottomWidth: 1,
-          position: "absolute",
-          top: this.state.viewTopOffset,
-          bottom: this.state.viewBottomOffset,
-          left: this.state.viewLeftOffset,
-          right: this.state.viewRightOffset,
-          paddingTop: this.state.viewTopInset,
-          paddingBottom: this.state.viewBottomInset,
-          paddingLeft: this.state.viewLeftInset,
-          paddingRight: this.state.viewRightInset
-        }}
-      >
+      <Animated.View style={style}>
         <TouchableOpacity
           onPress={() => {
             this._alertTapped();
